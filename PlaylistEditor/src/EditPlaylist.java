@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.spec.DSAGenParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,11 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import org.apache.commons.io.FilenameUtils;
 
 public class EditPlaylist extends JPanel implements ActionListener {
 	JButton playlist;
@@ -23,9 +28,13 @@ public class EditPlaylist extends JPanel implements ActionListener {
 	JButton addDir;
 	JButton addToList;
 	
+	JTextArea label;
+	
 	String playlistName = null;
 	String songName;
 	List<String> songs = new ArrayList<String>();
+	
+	List<String> display = new ArrayList<String>();
 	
 	JFileChooser chooser;
 	String choosertitle;
@@ -64,6 +73,8 @@ public class EditPlaylist extends JPanel implements ActionListener {
 			}
 		});
 		
+		label = new JTextArea();
+		
 		playlist.addActionListener(this);
 		addSong.addActionListener(this);
 		addDir.addActionListener(this);
@@ -72,6 +83,7 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		add(addSong);
 		add(addDir);
 		add(addToList);
+		add(label);
 	}
 	
 	public String fileChooser(ActionEvent e){
@@ -121,13 +133,17 @@ public class EditPlaylist extends JPanel implements ActionListener {
 			playlistName = "";
 		}
 		
+		display.add("Playlist: " + playlistName);
 		System.out.println("Playlist: " + playlistName);
+		updateText();
 	}
 	
 	public void selectSong(ActionEvent e){
 		songName = fileChooser(e).replace('\\', '/').substring(3);
 		System.out.println("Song: " + songName);
-		songs.add(songName);
+		display.add("Song: " + songName);
+		songs.add(songName);		
+		updateText();
 	}
 	
 	public void selectDir(ActionEvent e){
@@ -136,9 +152,15 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		File[] list = file.listFiles();
 		
 		for(File f : list){
-			songName = f.getAbsolutePath().replace('\\', '/').substring(3);
-			System.out.println("Songs: " + songName);
-			songs.add(songName);
+			String ext = FilenameUtils.getExtension(f.toString());
+			
+			if(ext.equals("mp3") || ext.equals("wav") || ext.equals("m4a") || ext.equals("flac")){
+				songName = f.getAbsolutePath().replace('\\', '/').substring(3);
+				System.out.println("Songs: " + songName);
+				display.add("Songs: " + songName);
+				updateText();
+				songs.add(songName);
+			}
 		}
 	}
 	
@@ -154,6 +176,7 @@ public class EditPlaylist extends JPanel implements ActionListener {
 					out.println(prefix + s);
 				}
 			  	out.close();
+			  	display.add("Added songs to playlist");
 			}
 			catch(IOException e1){
 				System.out.println("Add to playlist error");
@@ -162,9 +185,19 @@ public class EditPlaylist extends JPanel implements ActionListener {
 			System.out.println("No playlist selected");
 		}
 	}
+	
+	public void updateText(){
+		
+		StringBuilder sb = new StringBuilder();
+		for (String s : display) {
+		    sb.append(s == null ? "" : s.toString());
+		    sb.append("\n");
+		}
+		label.setText(sb.toString());
+	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(150, 200);
+		return new Dimension(700, 700);
 	}
 
 	public static void main(String s[]) {
