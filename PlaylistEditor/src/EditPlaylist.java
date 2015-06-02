@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.spec.DSAGenParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +15,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import org.apache.commons.io.FilenameUtils;
 
+@SuppressWarnings("serial")
 public class EditPlaylist extends JPanel implements ActionListener {
 	JButton playlist;
 	JButton addSong;
@@ -90,7 +89,11 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		String selection = null;
 		
 		chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
+		if(playlistName != null){
+			chooser.setCurrentDirectory(new java.io.File(playlistName.substring(0,2)));
+		} else {
+			chooser.setCurrentDirectory(new java.io.File("."));
+		}
 		chooser.setDialogTitle(choosertitle);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
@@ -109,7 +112,12 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		String selection = null;
 		
 		chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
+		if(playlistName != null){
+			chooser.setCurrentDirectory(new java.io.File(playlistName.substring(0,2)));
+		} else {
+			chooser.setCurrentDirectory(new java.io.File("."));
+		}
+		
 		chooser.setDialogTitle(choosertitle);
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		
@@ -126,7 +134,6 @@ public class EditPlaylist extends JPanel implements ActionListener {
 
 	public void selectPlaylist(ActionEvent e) {
 		playlistName = fileChooser(e);
-		int len = playlistName.length() - 4;
 		
 		if(!playlistName.substring(playlistName.length() - 4).equals("m3u8")){
 			System.out.println("Not playlist file, choose again");
@@ -208,7 +215,6 @@ public class EditPlaylist extends JPanel implements ActionListener {
 				System.exit(0);
 			}
 		});
-		frame.setLocationRelativeTo(null);
 		frame.getContentPane().add(panel, "Center");
 		frame.setSize(panel.getPreferredSize());
 		frame.setVisible(true);
@@ -220,23 +226,3 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		
 	}
 }
-
-/*
- * import java.io.BufferedWriter; import java.io.File; import
- * java.io.FileWriter; import java.io.IOException; import java.io.PrintWriter;
- * 
- * 
- * public class EditPlaylist {
- * 
- * public static void main(String[] args) { String filePath =
- * "G:\\Playlists\\15-01-20 - Copy.m3u8"; File file = new File(filePath); String
- * prefix = "/<microSD1>/Music/";
- * 
- * try(PrintWriter out = new PrintWriter(new BufferedWriter(new
- * FileWriter(file.getAbsolutePath(), true)))) { out.println(prefix +
- * "TESTSONG.mp3");
- * 
- * }catch (IOException e) {
- * 
- * } } }
- */
