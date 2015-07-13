@@ -226,23 +226,3 @@ public class EditPlaylist extends JPanel implements ActionListener {
 		
 	}
 }
-
-/*
- * import java.io.BufferedWriter; import java.io.File; import
- * java.io.FileWriter; import java.io.IOException; import java.io.PrintWriter;
- * 
- * 
- * public class EditPlaylist {
- * 
- * public static void main(String[] args) { String filePath =
- * "G:\\Playlists\\15-01-20 - Copy.m3u8"; File file = new File(filePath); String
- * prefix = "/<microSD1>/Music/";
- * 
- * try(PrintWriter out = new PrintWriter(new BufferedWriter(new
- * FileWriter(file.getAbsolutePath(), true)))) { out.println(prefix +
- * "TESTSONG.mp3");
- * 
- * }catch (IOException e) {
- * 
- * } } }
- */
